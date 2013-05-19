@@ -7,4 +7,11 @@
                 <goal>gwt:run</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-gwt:clean</actionName>
+            <displayName>gwt:clean</displayName>
+            <goals>
+                <goal>gwt:clean</goal>
+            </goals>
+        </action>
     </actions>

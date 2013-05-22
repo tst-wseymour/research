@@ -27,8 +27,8 @@ public class AccordionContainer {
     public ContentPanel getContainer() {
         // create the accordion
         ContentPanel accordionCt = new ContentPanel();
-        accordionCt.setSize(180, 200);
-        accordionCt.setHeadingHtml("Library Widget");
+        accordionCt.setSize(400, 300);
+        accordionCt.setHeadingHtml("<center>Library Widget</center>");
         accordionCt.setBodyBorder(false);
         accordionCt.setLayout(new AccordionLayout());
 

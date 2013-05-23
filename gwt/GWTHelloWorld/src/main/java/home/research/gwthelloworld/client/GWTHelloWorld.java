@@ -7,8 +7,11 @@ import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.MessageBox.MessageBoxType;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -25,14 +28,49 @@ public class GWTHelloWorld implements EntryPoint {
      * returns an error.
      */
     private static final String SERVER_ERROR = "An error occurred while "
-        + "attempting to contact the server. Please check your network "
-        + "connection and try again.";
+            + "attempting to contact the server. Please check your network "
+            + "connection and try again.";
     /**
      * Create a remote service proxy to talk to the server-side Greeting
      * service.
      */
     private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
     private final Messages messages = GWT.create(Messages.class);
+
+    private void addWindow() {
+        // basic window setup
+        Window xWindow = new Window();
+        xWindow.setHeadingHtml("GXT CookBook | Recipe One");
+        xWindow.setClosable(true);
+        xWindow.setSize(350, 170);
+        xWindow.setModal(true);
+        xWindow.setBlinkModal(true);
+        xWindow.setResizable(true);
+        xWindow.setMaximizable(true);
+
+
+        // prepare content to show
+        LayoutContainer textPanel = new VerticalPanel();
+        textPanel.setStyleAttribute("padding", "15px");
+        textPanel.addText("This is our first recipe from GXT Cookbok, how are we doing so far ...");
+        xWindow.add(textPanel);
+        
+//        // some content
+//        StringBuilder msg = new StringBuilder();
+//        msg.append("This window can do lots of stuff.");
+
+        // constrain maximize surface to container, not browser's complete viewable area
+//        xWindow.setContainer(textPanel.getElement());
+        // constrain draggable to the same as above
+//        xWindow.getDraggable().setContainer(textPanel);
+
+
+        // 
+//        AccordionContainer accordionContainer = new AccordionContainer();
+//        RootPanel.get().add(accordionContainer.getContainer());        
+        
+        xWindow.show();
+    }
 
     private void addDialog() {
         Dialog dialog = new Dialog();
@@ -48,11 +86,11 @@ public class GWTHelloWorld implements EntryPoint {
         dialog.show();
 
         SelectionListener<ButtonEvent> listener = new SelectionListener<ButtonEvent>() {
-
             @Override
             public void componentSelected(ButtonEvent evt) {
                 String text = evt.getButton().getHtml();
-                String format = "You clicked the {0} button";
+                String format = "You clicked the {0} button, launching the window now...";
+               
                 Info.display("Recipe Three", format, text);
             }
         };
@@ -66,17 +104,16 @@ public class GWTHelloWorld implements EntryPoint {
     private void addMsgBox() {
         // btn click handlers
         Listener<MessageBoxEvent> listener = new Listener<MessageBoxEvent>() {
-
             public void handleEvent(MessageBoxEvent be) {
                 Button btn = be.getButtonClicked();
                 Info.display("Recipe Four", "The '{0}' button was presseed", btn.getHtml());
                 MessageBoxType msgBoxType = be.getMessageBox().getType();
-                
-                if(msgBoxType != null && (msgBoxType.equals(MessageBoxType.PROMPT) ||
-                    msgBoxType.equals(MessageBoxType.MULTIPROMPT))) {
+
+                if (msgBoxType != null && (msgBoxType.equals(MessageBoxType.PROMPT)
+                        || msgBoxType.equals(MessageBoxType.MULTIPROMPT))) {
                     Info.display("Recipe Four : Prompt", be.getValue());
                 }
-            
+
             }
         };
         // show alert
@@ -89,12 +126,10 @@ public class GWTHelloWorld implements EntryPoint {
         final MessageBox pBar = MessageBox.progress("-Progress", "Calculating your comprehension so far", "wait ...");
         pBar.getProgressBar().auto();
         Timer pBarTimer = new Timer() {
-
             @Override
             public void run() {
                 pBar.close();
             }
-            
         };
         pBarTimer.schedule(5000);
     }
@@ -104,84 +139,15 @@ public class GWTHelloWorld implements EntryPoint {
      */
     public void onModuleLoad() {
 
+        
         this.addDialog();
         this.addMsgBox();
 
 
 
-
-// *****************************************************************************     
-        // dialog window
-//        Dialog dialog = new Dialog();
-//        dialog.setBodyBorder(false);
-//        dialog.setClosable(false);
-//        dialog.setHideOnButtonClick(true);
-//        dialog.setButtons(Dialog.OKCANCEL);
-//        dialog.setScrollMode(Scroll.NONE);
-//        dialog.setHeadingHtml("GXT Cookbook :: Recipe Three");
-//        dialog.addText("Dialogs are descendants of the Window class, so they are windows that can do even more.");
-//        dialog.show();
-//        SelectionListener<ButtonEvent> listener = new SelectionListener<ButtonEvent>() {
-//
-//            @Override
-//            public void componentSelected(ButtonEvent evt) {
-//                String text = evt.getButton().getHtml();
-//                String format = "You clicked the {0} button";
-//                Info.display("Recipe Three", format, text);
-//            }
-//        };
-//
-//        Button okBtn = dialog.getButtonById(Dialog.OK);
-//        okBtn.addSelectionListener(listener);
-//        Button cancelBtn = dialog.getButtonById(Dialog.OK);
-//        cancelBtn.addSelectionListener(listener);
-
-
-
-        // basic window setup
-//        Window xWindow = new Window();
-//        xWindow.setHeadingHtml("GXT CookBook | Recipe One");
-//        xWindow.setClosable(true);
-//        xWindow.setSize(350, 170);
-//        xWindow.setModal(true);
-//        xWindow.setBlinkModal(true);
-//        xWindow.setResizable(true);
-//        xWindow.setMaximizable(true);
-
-
-        // prepare content to show
-//        LayoutContainer textPanel = new VerticalPanel();
-//        textPanel.setStyleAttribute("padding", "15px");
-//        textPanel.addText("This is our first recipe from GXT Cookbok, how are we doing so far ...");
-//
-//        // some content
-//        StringBuilder msg = new StringBuilder();
-//        msg.append("This window can do lots of stuff.");
-
-        // constrain maximize surface to container, not browser's complete viewable area
-//        xWindow.setContainer(textPanel.getElement());
-        // constrain draggable to the same as above
-//        xWindow.getDraggable().setContainer(textPanel);
-
-
-        // 
-//        AccordionContainer accordionContainer = new AccordionContainer();
-//        RootPanel.get().add(accordionContainer.getContainer());
-
-
-
-//         place content on the window
-//         and display it.
-//        xWindow.add(textPanel);
-//        xWindow.show();
 // *****************************************************************************
-
-
-
-
-
-
-
+// BEGIN: BoilerPlate        
+// *****************************************************************************        
 //    final Button sendButton = new Button( messages.sendButton() );
 //    final TextBox nameField = new TextBox();
 //    nameField.setText( messages.nameField() );
@@ -287,6 +253,9 @@ public class GWTHelloWorld implements EntryPoint {
 //    MyHandler handler = new MyHandler();
 //    sendButton.addClickHandler(handler);
 //    nameField.addKeyUpHandler(handler);
+// *****************************************************************************
+// END: BoilerPlate        
+// *****************************************************************************                
     }
     // eo onModuleLoad
 }

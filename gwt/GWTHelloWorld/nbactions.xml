@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-gwt:run</actionName>
+            <displayName>gwt:run</displayName>
+            <goals>
+                <goal>gwt:run</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-install gxt 2.2.5</actionName>
+            <displayName>install gxt 2.2.5</displayName>
+            <goals>
+                <goal>install:install-file</goal>
+                <goal>-Dfile=C:\development\lib\sencha\gxt\2.2.5\gxt-2.2.5\gxt-2.2.5-gwt22.jar</goal>
+                <goal>-DgroupId=com.extjs</goal>
+                <goal>-DartifactId=gxt</goal>
+                <goal>-Dversion=2.2.5</goal>
+                <goal>-Dpackaging=jar</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-gwt:clean</actionName>
+            <displayName>gwt:clean</displayName>
+            <goals>
+                <goal>gwt:clean</goal>
+            </goals>
+        </action>
+    </actions>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-cp</actionName>
+            <displayName>cp</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>package</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-gwt:run</actionName>
+            <displayName>gwt:run</displayName>
+            <goals>
+                <goal>gwt:run</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-gwt:clean</actionName>
+            <displayName>gwt:clean</displayName>
+            <goals>
+                <goal>gwt:clean</goal>
+            </goals>
+        </action>
+    </actions>

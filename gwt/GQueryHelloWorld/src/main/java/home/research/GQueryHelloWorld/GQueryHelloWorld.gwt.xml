@@ -1,0 +1,5 @@
+<module rename-to='GQueryHelloWorld'>
+    <inherits name='com.google.gwt.query.Query'/>
+    <entry-point class='home.research.GQueryHelloWorld.client.GQueryHelloWorld'/>
+</module>
+

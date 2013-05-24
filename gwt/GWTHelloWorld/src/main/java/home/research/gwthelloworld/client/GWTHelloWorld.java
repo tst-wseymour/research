@@ -39,9 +39,8 @@ import java.util.List;
  */
 public class GWTHelloWorld implements EntryPoint {
 
-    
     private static LayoutContainer centerPanel = new LayoutContainer();
-    
+    private static LayoutContainer rightPanel = new VerticalPanel();
     /**
      * The message displayed to the user when the server cannot be reached or
      * returns an error.
@@ -58,7 +57,7 @@ public class GWTHelloWorld implements EntryPoint {
 //    private final Messages messages = GWT.create(Messages.class);
     private void addWindow() {
         GWT.log("### addWindow()");
-        
+
         // basic window setup
         Window xWindow = new Window();
         xWindow.setHeadingHtml("GXT CookBook | Recipe One");
@@ -269,23 +268,63 @@ public class GWTHelloWorld implements EntryPoint {
         Button toolBtn = new Button("Window Tools");	// correct book from SplitButton to this
         toolBtn.setMenu(toolMenu);
         buttonBar.add(toolBtn);
+
+        // ### Add widgets to center layout container
         centerPanel.add(buttonBar, new FlowData(10));
-        RootPanel.get().add(centerPanel);
+
     }
 
+    private void launchRecipeMenu() {
+        GWT.log("### launchRecipeMenu()");
+        final Menu toolMenu = new Menu();
+        ButtonBar buttonBar = new ButtonBar();
+
+        Button addWindowBtn = new Button("Add Wayne", new SelectionListener<ButtonEvent>() { // anonymous SelectionListener<ButtonEvent>
+            @Override
+            public void componentSelected(ButtonEvent evt) {
+                int randInt = Random.nextInt(20);
+                Window dummy = new Window();
+                dummy.setClosable(false);
+                dummy.setSize(200, 120);
+                dummy.setMinimizable(true);
+                dummy.setMaximizable(true);
+                dummy.setId("win_" + randInt);
+                dummy.setHeadingHtml("Window " + randInt);
+                dummy.setContainer(rightPanel.getElement());
+//                dummy.addWindowListener(windowListener);
+
+                dummy.show();
+
+
+
+                //                windowList.add(dummy);
+            }
+        });
+        buttonBar.add(addWindowBtn);
+        toolMenu.add(buttonBar);
+        // ### Add widgets to center layout container
+        centerPanel.add(toolMenu);
+//        toolMenu.add(new SeparatorMenuItem());
+    }
 
     /**
      * This is the entry point method.
      */
     @Override
     public void onModuleLoad() {
+//        this.launchRecipeMenu();
 
 //        this.addWindow();
 //        this.addDialog();
 //        this.addMsgBox();
+        
         this.launchWindowManager();
+
+       
         
-        
+        // Attach center layout contaners to the html host page.
+        RootPanel.get().add(centerPanel);
+         RootPanel.get().add(rightPanel);
 
 
 // *****************************************************************************

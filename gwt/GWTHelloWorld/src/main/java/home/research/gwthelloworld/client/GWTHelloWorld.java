@@ -3,8 +3,12 @@ package home.research.gwthelloworld.client;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MenuEvent;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.event.WindowEvent;
+import com.extjs.gxt.ui.client.event.WindowListener;
+import com.extjs.gxt.ui.client.widget.Component;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
@@ -12,10 +16,22 @@ import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.MessageBox.MessageBoxType;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.Window;
+import com.extjs.gxt.ui.client.widget.WindowManager;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ButtonBar;
+import com.extjs.gxt.ui.client.widget.button.SplitButton;
+import com.extjs.gxt.ui.client.widget.layout.FlowData;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
+import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.RootPanel;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Entry point classes define
@@ -23,6 +39,9 @@ import com.google.gwt.user.client.Timer;
  */
 public class GWTHelloWorld implements EntryPoint {
 
+    
+    private static LayoutContainer centerPanel = new LayoutContainer();
+    
     /**
      * The message displayed to the user when the server cannot be reached or
      * returns an error.
@@ -132,21 +151,137 @@ public class GWTHelloWorld implements EntryPoint {
         };
         pBarTimer.schedule(5000);
     }
-    
+
     private void launchWindowManager() {
-        // vars
-        
+        GWT.log("### launchWindowManager()");
+        // set up some "global" variables
+        final Menu toolMenu = new Menu();
+        ButtonBar buttonBar = new ButtonBar();
+        final WindowManager mgr = WindowManager.get();
+        final List<Window> windowList = new ArrayList<Window>();
+
+        final WindowListener windowListener = new WindowListener() {
+            @Override
+            public void windowMinimize(WindowEvent we) {
+                final Window window = we.getWindow();
+
+                // make a menu-item for this window,
+                // but only once, so we'll search first
+                boolean found = false;
+                Iterator<Component> it = toolMenu.getItems().iterator();
+                while (it.hasNext()) {
+                    Component cmp = (Component) it.next();
+                    if (cmp instanceof MenuItem) {
+                        MenuItem item = (MenuItem) cmp;
+                        if (item.getHtml().equals(we.getWindow().getHeadingHtml())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!found) {
+                    toolMenu.insert(new MenuItem(we.getWindow().getHeadingHtml(), new SelectionListener<MenuEvent>() {
+                        @Override
+                        public void componentSelected(MenuEvent ce) {
+                            if (!window.isVisible()) {
+                                window.show();
+                            }
+                            mgr.bringToFront(window);
+                        }
+                    }), 0);
+                }
+                window.hide();
+            }
+        };
+
+        // we'll use this to generate the windows
+        Button addWindowBtn = new Button("Add Window", new SelectionListener<ButtonEvent>() { // anonymous SelectionListener<ButtonEvent>
+            @Override
+            public void componentSelected(ButtonEvent evt) {
+                int randInt = Random.nextInt(20);
+                Window dummy = new Window();
+                dummy.setClosable(false);
+                dummy.setSize(200, 120);
+                dummy.setMinimizable(true);
+                dummy.setMaximizable(true);
+                dummy.setId("win_" + randInt);
+                dummy.setHeadingHtml("Window " + randInt);
+                dummy.setContainer(centerPanel.getElement());
+                dummy.addWindowListener(windowListener);
+
+                dummy.show();
+                windowList.add(dummy);
+            }
+        });
+        buttonBar.add(addWindowBtn);
+        toolMenu.add(new SeparatorMenuItem());
+
+        // add the menu-items to handle hide/show/cascade all				
+        // hide-all is easy anyways
+        toolMenu.add(new MenuItem("Hide All", new SelectionListener<MenuEvent>() {
+            @Override
+            public void componentSelected(MenuEvent evt) {
+                mgr.hideAll();
+            }
+        }));
+
+        // show-all only works because we kept
+        // a local list of the windows we've made
+        toolMenu.add(new MenuItem("Show All", new SelectionListener<MenuEvent>() {
+            @Override
+            public void componentSelected(MenuEvent evt) {
+                // mgr.getWindows() || mgr.getStack() returns only visible windows
+                // so we always have an empty list after calling mgr.hideAll()
+                for (Window window : windowList) {
+                    if (window != null && !window.isVisible()) {
+                        window.show();
+                    }
+                }
+            }
+        }));
+        // cascade is tricky, yeah.
+        // cascade is implemented by positioning
+        // the windows atop each other, but 25x29 pixels
+        // "more" from the last one
+        toolMenu.add(new MenuItem("Cascade All", new SelectionListener<MenuEvent>() {
+            @Override
+            public void componentSelected(MenuEvent evt) {
+                List<Window> windows = mgr.getWindows();
+                Window reference = null;
+                for (Window window : windows) {
+                    window.show();
+                    mgr.bringToFront(window);
+                    window.center();
+                    if (reference != null) {
+                        window.setPosition(reference.getPosition(true).x + 25, reference.getPosition(true).y + 29);
+                    }
+                    reference = window;
+                }
+            }
+        }));
+
+        // create a menu button and attach the menu to it
+        Button toolBtn = new Button("Window Tools");	// correct book from SplitButton to this
+        toolBtn.setMenu(toolMenu);
+        buttonBar.add(toolBtn);
+        centerPanel.add(buttonBar, new FlowData(10));
+        RootPanel.get().add(centerPanel);
     }
+
 
     /**
      * This is the entry point method.
      */
+    @Override
     public void onModuleLoad() {
 
 //        this.addWindow();
-        this.addDialog();
+//        this.addDialog();
 //        this.addMsgBox();
         this.launchWindowManager();
+        
+        
 
 
 // *****************************************************************************

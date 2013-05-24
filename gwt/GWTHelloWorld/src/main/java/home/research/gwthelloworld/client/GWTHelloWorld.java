@@ -30,13 +30,13 @@ public class GWTHelloWorld implements EntryPoint {
     private static final String SERVER_ERROR = "An error occurred while "
             + "attempting to contact the server. Please check your network "
             + "connection and try again.";
+
     /**
      * Create a remote service proxy to talk to the server-side Greeting
      * service.
      */
-    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
-    private final Messages messages = GWT.create(Messages.class);
-
+//    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+//    private final Messages messages = GWT.create(Messages.class);
     private void addWindow() {
         // basic window setup
         Window xWindow = new Window();
@@ -54,7 +54,7 @@ public class GWTHelloWorld implements EntryPoint {
         textPanel.setStyleAttribute("padding", "15px");
         textPanel.addText("This is our first recipe from GXT Cookbok, how are we doing so far ...");
         xWindow.add(textPanel);
-        
+
 //        // some content
 //        StringBuilder msg = new StringBuilder();
 //        msg.append("This window can do lots of stuff.");
@@ -68,12 +68,12 @@ public class GWTHelloWorld implements EntryPoint {
         // 
 //        AccordionContainer accordionContainer = new AccordionContainer();
 //        RootPanel.get().add(accordionContainer.getContainer());        
-        
+
         xWindow.show();
     }
 
     private void addDialog() {
-        Dialog dialog = new Dialog();
+        final Dialog dialog = new Dialog();
         dialog.setBodyBorder(false);
         dialog.setClosable(false);
         dialog.setHideOnButtonClick(false);
@@ -82,15 +82,14 @@ public class GWTHelloWorld implements EntryPoint {
         dialog.setHeadingHtml("GXT Cookbook :: Recipe Three");
         dialog.addText("Dialogs are descendants of the Window class, so they are windows that can do even more.");
 
-        // add to view 
         dialog.show();
 
         SelectionListener<ButtonEvent> listener = new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent evt) {
                 String text = evt.getButton().getHtml();
-                String format = "You clicked the {0} button, launching the window now...";
-               
+                String format = "You clicked the {0} button";
+
                 Info.display("Recipe Three", format, text);
             }
         };
@@ -133,16 +132,21 @@ public class GWTHelloWorld implements EntryPoint {
         };
         pBarTimer.schedule(5000);
     }
+    
+    private void launchWindowManager() {
+        // vars
+        
+    }
 
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
 
-        
+//        this.addWindow();
         this.addDialog();
-        this.addMsgBox();
-
+//        this.addMsgBox();
+        this.launchWindowManager();
 
 
 // *****************************************************************************

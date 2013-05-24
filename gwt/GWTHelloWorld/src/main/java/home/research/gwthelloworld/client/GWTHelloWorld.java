@@ -57,6 +57,8 @@ public class GWTHelloWorld implements EntryPoint {
 //    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 //    private final Messages messages = GWT.create(Messages.class);
     private void addWindow() {
+        GWT.log("### addWindow()");
+        
         // basic window setup
         Window xWindow = new Window();
         xWindow.setHeadingHtml("GXT CookBook | Recipe One");
@@ -92,6 +94,7 @@ public class GWTHelloWorld implements EntryPoint {
     }
 
     private void addDialog() {
+        GWT.log("### addDialog()");
         final Dialog dialog = new Dialog();
         dialog.setBodyBorder(false);
         dialog.setClosable(false);
@@ -120,6 +123,7 @@ public class GWTHelloWorld implements EntryPoint {
     }
 
     private void addMsgBox() {
+        GWT.log("### addMsgBox()");
         // btn click handlers
         Listener<MessageBoxEvent> listener = new Listener<MessageBoxEvent>() {
             public void handleEvent(MessageBoxEvent be) {

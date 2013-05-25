@@ -1,13 +1,7 @@
 package home.research.gwthelloworld.client;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.MenuEvent;
-import com.extjs.gxt.ui.client.event.MessageBoxEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.event.WindowEvent;
-import com.extjs.gxt.ui.client.event.WindowListener;
+import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.MessageBox.MessageBoxType;
 import com.extjs.gxt.ui.client.widget.button.Button;
@@ -37,7 +31,7 @@ import java.util.List;
  * <code>onModuleLoad()</code>.
  */
 public class GWTHelloWorld implements EntryPoint {
-    
+
     private static LayoutContainer centerPanel = new LayoutContainer();
     private static LayoutContainer rightPanel = new VerticalPanel();
     /**
@@ -90,7 +84,7 @@ public class GWTHelloWorld implements EntryPoint {
 
         xWindow.show();
     }
-    
+
     private void addDialog() {
         GWT.log("### addDialog()");
         final Dialog dialog = new Dialog();
@@ -101,41 +95,41 @@ public class GWTHelloWorld implements EntryPoint {
         dialog.setScrollMode(Scroll.NONE);
         dialog.setHeadingHtml("GXT Cookbook :: Recipe Three");
         dialog.addText("Dialogs are descendants of the Window class, so they are windows that can do even more.");
-        
+
         dialog.show();
-        
+
         SelectionListener<ButtonEvent> listener = new SelectionListener<ButtonEvent>() {
-            
+
             @Override
             public void componentSelected(ButtonEvent evt) {
                 String text = evt.getButton().getHtml();
                 String format = "You clicked the {0} button";
-                
+
                 Info.display("Recipe Three", format, text);
             }
         };
-        
+
         Button okBtn = dialog.getButtonById(Dialog.OK);
         okBtn.addSelectionListener(listener);
         Button cancelBtn = dialog.getButtonById(Dialog.CANCEL);
         cancelBtn.addSelectionListener(listener);
     }
-    
+
     private void addMsgBox() {
         GWT.log("### addMsgBox()");
         // btn click handlers
         Listener<MessageBoxEvent> listener = new Listener<MessageBoxEvent>() {
-            
+
             public void handleEvent(MessageBoxEvent be) {
                 Button btn = be.getButtonClicked();
                 Info.display("Recipe Four", "The '{0}' button was presseed", btn.getHtml());
                 MessageBoxType msgBoxType = be.getMessageBox().getType();
-                
+
                 if (msgBoxType != null && (msgBoxType.equals(MessageBoxType.PROMPT)
                     || msgBoxType.equals(MessageBoxType.MULTIPROMPT))) {
                     Info.display("Recipe Four : Prompt", be.getValue());
                 }
-                
+
             }
         };
         // show alert
@@ -148,7 +142,7 @@ public class GWTHelloWorld implements EntryPoint {
         final MessageBox pBar = MessageBox.progress("-Progress", "Calculating your comprehension so far", "wait ...");
         pBar.getProgressBar().auto();
         Timer pBarTimer = new Timer() {
-            
+
             @Override
             public void run() {
                 pBar.close();
@@ -156,7 +150,7 @@ public class GWTHelloWorld implements EntryPoint {
         };
         pBarTimer.schedule(5000);
     }
-    
+
     private void launchWindowManager() {
         GWT.log("### launchWindowManager()");
         // set up some "global" variables
@@ -164,9 +158,9 @@ public class GWTHelloWorld implements EntryPoint {
         ButtonBar buttonBar = new ButtonBar();
         final WindowManager mgr = WindowManager.get();
         final List<Window> windowList = new ArrayList<Window>();
-        
+
         final WindowListener windowListener = new WindowListener() {
-            
+
             @Override
             public void windowMinimize(WindowEvent we) {
                 final Window window = we.getWindow();
@@ -185,10 +179,10 @@ public class GWTHelloWorld implements EntryPoint {
                         }
                     }
                 }
-                
+
                 if (!found) {
                     toolMenu.insert(new MenuItem(we.getWindow().getHeadingHtml(), new SelectionListener<MenuEvent>() {
-                        
+
                         @Override
                         public void componentSelected(MenuEvent ce) {
                             if (!window.isVisible()) {
@@ -217,7 +211,7 @@ public class GWTHelloWorld implements EntryPoint {
                 dummy.setHeadingHtml("Window " + randInt);
                 dummy.setContainer(centerPanel.getElement());
                 dummy.addWindowListener(windowListener);
-                
+
                 dummy.show();
                 windowList.add(dummy);
             }
@@ -228,7 +222,7 @@ public class GWTHelloWorld implements EntryPoint {
         // add the menu-items to handle hide/show/cascade all				
         // hide-all is easy anyways
         toolMenu.add(new MenuItem("Hide All", new SelectionListener<MenuEvent>() {
-            
+
             @Override
             public void componentSelected(MenuEvent evt) {
                 mgr.hideAll();
@@ -238,7 +232,7 @@ public class GWTHelloWorld implements EntryPoint {
         // show-all only works because we kept
         // a local list of the windows we've made
         toolMenu.add(new MenuItem("Show All", new SelectionListener<MenuEvent>() {
-            
+
             @Override
             public void componentSelected(MenuEvent evt) {
                 // mgr.getWindows() || mgr.getStack() returns only visible windows
@@ -255,7 +249,7 @@ public class GWTHelloWorld implements EntryPoint {
         // the windows atop each other, but 25x29 pixels
         // "more" from the last one
         toolMenu.add(new MenuItem("Cascade All", new SelectionListener<MenuEvent>() {
-            
+
             @Override
             public void componentSelected(MenuEvent evt) {
                 List<Window> windows = mgr.getWindows();
@@ -279,11 +273,11 @@ public class GWTHelloWorld implements EntryPoint {
 
         // ### Add widgets to center layout container
         centerPanel.add(buttonBar, new FlowData(10));
-        
+
     }
-    
+
     private void addTabbedContent() {
-        
+
         TabPanel tabPanel = new TabPanel();
         tabPanel.setHeight(250);
         tabPanel.setWidth(450);
@@ -291,7 +285,7 @@ public class GWTHelloWorld implements EntryPoint {
 
         // set the bottom line
         tabPanel.setTabPosition(TabPanel.TabPosition.BOTTOM);
-        
+
         for (int i = 1; i <= 5; ++i) {
             String textFormat = "TabItem " + i;
             TabItem aTabItem = new TabItem(textFormat);
@@ -310,14 +304,14 @@ public class GWTHelloWorld implements EntryPoint {
          *
          */
         Icons ICONS = GWT.create(Icons.class);
-        
+
         String title = "DashBoard";
         TabItem homeTab = new TabItem(title);
         homeTab.setIcon(AbstractImagePrototype.create(ICONS.home()));
         homeTab.getHeader().setToolTip("Our " + title);
         homeTab.add(new HtmlContainer("<h1>Dashboard Tab</h1>"));
         tabPanel.add(homeTab);
-        
+
         title = "Valued Customers";
         TabItem customersTab = new TabItem(title);
         customersTab.setIcon(AbstractImagePrototype.create(ICONS.people()));
@@ -325,7 +319,7 @@ public class GWTHelloWorld implements EntryPoint {
         customersTab.setClosable(true);
         customersTab.add(new HtmlContainer("<h1>Customers Tab</h1>"));
         tabPanel.add(customersTab);
-        
+
         title = "Data Reports";
         TabItem reportsTab = new TabItem(title);
         reportsTab.setIcon(AbstractImagePrototype.create(ICONS.orgchart()));
@@ -338,12 +332,12 @@ public class GWTHelloWorld implements EntryPoint {
          * content panel using the static GxtCookBk.getAppCenterPanel() call. We
          * add the tabPanel to the main content panel.
          */
-        
+
         centerPanel.add(tabPanel);
-        
-        
+
+
     }
-    
+
     private void addScrollableTabPanel() {
         final TabPanel tabPanel = new TabPanel();
         tabPanel.setHeight(250);
@@ -361,33 +355,86 @@ public class GWTHelloWorld implements EntryPoint {
         ButtonBar buttonBar = new ButtonBar();
         // starting the toggle btn to scroll to last initially
         buttonBar.add(new ToggleButton("Scroll to Last Tab", new SelectionListener<ButtonEvent>() {
-            
+
             @Override
             public void componentSelected(ButtonEvent ce) {
                 int index = 0;
                 String title = "Scroll to Last Tab";
                 ToggleButton btn = (ToggleButton) ce.getButton();
-                if(btn.isPressed()) {
-                    index = tabPanel.getItemCount()-1;
+                if (btn.isPressed()) {
+                    index = tabPanel.getItemCount() - 1;
                     title = "Scroll to First Tab";
-                    
+
                 } else {
                     title = "Scroll to Last Tab";
                     index = 0;
                 }
                 TabItem target = tabPanel.getItem(index);
-                if(tabPanel.getSelectedItem() != target) {
+                if (tabPanel.getSelectedItem() != target) {
                     tabPanel.scrollToTab(target, true);
                     tabPanel.setSelection(target);
                     btn.setText(title);
                 }
-                    
+
             }
         }));
-        
+
         // add to view
         centerPanel.add(tabPanel);
         centerPanel.add(buttonBar);
+    }
+
+    private void addProgrammaticTabs() {
+        
+        final TabPanel tabPanel = new TabPanel();
+        tabPanel.setHeight(250);
+        tabPanel.setWidth(450);
+        tabPanel.setTabScroll(true);
+        tabPanel.setAnimScroll(true);
+        tabPanel.setCloseContextMenu(true);
+        TabItem homeTab = new TabItem("Dashboard");
+        homeTab.setClosable(true);
+        tabPanel.add(homeTab);
+
+        ButtonBar btnBar = new ButtonBar();
+        btnBar.add(new Button("Add Tab", new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                String textFormat = "Tab Item" + (tabPanel.getItemCount()+1);
+                TabItem tab = new TabItem(textFormat);
+                tab.setClosable(true);
+                tabPanel.add(tab);
+                
+            }
+        }));
+        
+        btnBar.add(new Button("Remove Tab", new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                TabItem tab = tabPanel.getSelectedItem();
+                if(tab.isClosable()) {
+                    tabPanel.remove(tab);
+                    
+                }
+            }
+        }));
+        tabPanel.addListener(Events.BeforeRemove, new Listener<TabPanelEvent>() {
+
+            @Override
+            public void handleEvent(TabPanelEvent be) {
+                if(be.getItem().getTabPanel().getItemCount() == 1) {
+                    be.setCancelled(true);
+                    MessageBox.alert("Error", "But there's only one tab left, Y remove it", null);
+                    
+                }
+            }
+        });
+        
+        // add to view
+        centerPanel.add(tabPanel);
+        centerPanel.add(btnBar);
     }
 
     /**
@@ -402,6 +449,9 @@ public class GWTHelloWorld implements EntryPoint {
 //        this.launchWindowManager();
 //        this.addTabbedContent();
         this.addScrollableTabPanel();
+        this.addProgrammaticTabs();
+
+
 
 
 

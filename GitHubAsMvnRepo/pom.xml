@@ -16,7 +16,19 @@
         <!-- github server corresponds to entry in ~/.m2/settings.xml -->
         <github.global.server>github</github.global.server>
     </properties>
-
+    
+<!--    There's one more step you'll want to take, which is to configure any poms that depend on your pom to know where your repository is. Add the following snippet to any project's pom that depends on your project:
+    <repositories>
+        <repository>
+            <id>${project.artifactId}-mvn-repo</id>
+            <url>https://github.com/tst-wseymour/${project.artifactId}/mvn-repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+-->
     <distributionManagement>
         <repository>
             <id>github</id>

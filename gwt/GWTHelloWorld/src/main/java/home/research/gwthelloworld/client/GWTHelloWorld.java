@@ -287,6 +287,17 @@ public class GWTHelloWorld implements EntryPoint {
         tabPanel.setHeight(250);
         tabPanel.setWidth(450);
         tabPanel.setCloseContextMenu(true);
+        
+        // set the bottom line
+        tabPanel.setTabPosition(TabPanel.TabPosition.BOTTOM);
+        
+        for(int i = 1; i <=5; ++i) {
+            String textFormat = "TabItem " + i;
+            TabItem aTabItem = new TabItem(textFormat);
+            aTabItem.setClosable(true);
+            aTabItem.add(new HtmlContainer("<h1>Tab " + i + "</h1>"));
+            tabPanel.add(aTabItem);
+        }
 
 
         /*
@@ -301,14 +312,14 @@ public class GWTHelloWorld implements EntryPoint {
 
         String title = "DashBoard";
         TabItem homeTab = new TabItem(title);
-        homeTab.setIcon(AbstractImagePrototype.create((ImageResource)ICONS.home()));
+        homeTab.setIcon(AbstractImagePrototype.create(ICONS.home()));
         homeTab.getHeader().setToolTip("Our " + title);
         homeTab.add(new HtmlContainer("<h1>Dashboard Tab</h1>"));
         tabPanel.add(homeTab);
 
         title = "Valued Customers";
         TabItem customersTab = new TabItem(title);
-        customersTab.setIcon(AbstractImagePrototype.create((ImageResource)ICONS.people()));
+        customersTab.setIcon(AbstractImagePrototype.create(ICONS.people()));
         customersTab.getHeader().setToolTip("Our Really " + title);
         customersTab.setClosable(true);
         customersTab.add(new HtmlContainer("<h1>Customers Tab</h1>"));
@@ -316,7 +327,7 @@ public class GWTHelloWorld implements EntryPoint {
 
         title = "Data Reports";
         TabItem reportsTab = new TabItem(title);
-        reportsTab.setIcon(AbstractImagePrototype.create((ImageResource)ICONS.orgchart()));
+        reportsTab.setIcon(AbstractImagePrototype.create(ICONS.orgchart()));
         reportsTab.getHeader().setToolTip("The customer " + title);
         reportsTab.setClosable(true);
         reportsTab.add(new HtmlContainer("<h1>Reports Tab</h1>"));

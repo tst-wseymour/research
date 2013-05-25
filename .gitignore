@@ -1,1 +1,5 @@
 target/
+/gwt/LibraryWidget/.settings/
+/gwt/GWTHelloWorld/.settings/
+/gwt/DocLibrary/LibraryWidget/.settings/
+/gwt/GWTPhotoAlbum/nbproject/private/

@@ -10,7 +10,7 @@
   <artifactId>GwtMvnSpike</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>GwtMvnSpike :: Module1</name>
+  <name>GwtMvnSpike :: AccordionLayout</name>
 
   <properties>
     <!-- Convenience property to set the GWT version -->

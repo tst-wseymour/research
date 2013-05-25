@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module>
-  <!-- Inherit our applications main module.                      -->
-  <inherits name='home.research.gwthelloworld.GWTHelloWorld' />
-
-  <!-- Specify the path to any remote services.                   -->
-  <servlet path="/GWTHelloWorld/greet" class="home.research.gwthelloworld.server.GreetingServiceImpl" />
-
-</module>

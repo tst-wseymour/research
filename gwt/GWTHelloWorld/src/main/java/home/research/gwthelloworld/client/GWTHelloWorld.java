@@ -8,26 +8,24 @@ import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.WindowEvent;
 import com.extjs.gxt.ui.client.event.WindowListener;
-import com.extjs.gxt.ui.client.widget.Component;
-import com.extjs.gxt.ui.client.widget.Dialog;
-import com.extjs.gxt.ui.client.widget.Info;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.MessageBox.MessageBoxType;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
-import com.extjs.gxt.ui.client.widget.Window;
-import com.extjs.gxt.ui.client.widget.WindowManager;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.button.ButtonBar;
-import com.extjs.gxt.ui.client.widget.button.SplitButton;
 import com.extjs.gxt.ui.client.widget.layout.FlowData;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ResourcePrototype;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+
 import com.google.gwt.user.client.ui.RootPanel;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,8 +44,8 @@ public class GWTHelloWorld implements EntryPoint {
      * returns an error.
      */
     private static final String SERVER_ERROR = "An error occurred while "
-            + "attempting to contact the server. Please check your network "
-            + "connection and try again.";
+        + "attempting to contact the server. Please check your network "
+        + "connection and try again.";
 
     /**
      * Create a remote service proxy to talk to the server-side Greeting
@@ -106,6 +104,7 @@ public class GWTHelloWorld implements EntryPoint {
         dialog.show();
 
         SelectionListener<ButtonEvent> listener = new SelectionListener<ButtonEvent>() {
+
             @Override
             public void componentSelected(ButtonEvent evt) {
                 String text = evt.getButton().getHtml();
@@ -125,13 +124,14 @@ public class GWTHelloWorld implements EntryPoint {
         GWT.log("### addMsgBox()");
         // btn click handlers
         Listener<MessageBoxEvent> listener = new Listener<MessageBoxEvent>() {
+
             public void handleEvent(MessageBoxEvent be) {
                 Button btn = be.getButtonClicked();
                 Info.display("Recipe Four", "The '{0}' button was presseed", btn.getHtml());
                 MessageBoxType msgBoxType = be.getMessageBox().getType();
 
                 if (msgBoxType != null && (msgBoxType.equals(MessageBoxType.PROMPT)
-                        || msgBoxType.equals(MessageBoxType.MULTIPROMPT))) {
+                    || msgBoxType.equals(MessageBoxType.MULTIPROMPT))) {
                     Info.display("Recipe Four : Prompt", be.getValue());
                 }
 
@@ -147,6 +147,7 @@ public class GWTHelloWorld implements EntryPoint {
         final MessageBox pBar = MessageBox.progress("-Progress", "Calculating your comprehension so far", "wait ...");
         pBar.getProgressBar().auto();
         Timer pBarTimer = new Timer() {
+
             @Override
             public void run() {
                 pBar.close();
@@ -164,6 +165,7 @@ public class GWTHelloWorld implements EntryPoint {
         final List<Window> windowList = new ArrayList<Window>();
 
         final WindowListener windowListener = new WindowListener() {
+
             @Override
             public void windowMinimize(WindowEvent we) {
                 final Window window = we.getWindow();
@@ -185,6 +187,7 @@ public class GWTHelloWorld implements EntryPoint {
 
                 if (!found) {
                     toolMenu.insert(new MenuItem(we.getWindow().getHeadingHtml(), new SelectionListener<MenuEvent>() {
+
                         @Override
                         public void componentSelected(MenuEvent ce) {
                             if (!window.isVisible()) {
@@ -200,6 +203,7 @@ public class GWTHelloWorld implements EntryPoint {
 
         // we'll use this to generate the windows
         Button addWindowBtn = new Button("Add Window", new SelectionListener<ButtonEvent>() { // anonymous SelectionListener<ButtonEvent>
+
             @Override
             public void componentSelected(ButtonEvent evt) {
                 int randInt = Random.nextInt(20);
@@ -223,6 +227,7 @@ public class GWTHelloWorld implements EntryPoint {
         // add the menu-items to handle hide/show/cascade all				
         // hide-all is easy anyways
         toolMenu.add(new MenuItem("Hide All", new SelectionListener<MenuEvent>() {
+
             @Override
             public void componentSelected(MenuEvent evt) {
                 mgr.hideAll();
@@ -232,6 +237,7 @@ public class GWTHelloWorld implements EntryPoint {
         // show-all only works because we kept
         // a local list of the windows we've made
         toolMenu.add(new MenuItem("Show All", new SelectionListener<MenuEvent>() {
+
             @Override
             public void componentSelected(MenuEvent evt) {
                 // mgr.getWindows() || mgr.getStack() returns only visible windows
@@ -248,6 +254,7 @@ public class GWTHelloWorld implements EntryPoint {
         // the windows atop each other, but 25x29 pixels
         // "more" from the last one
         toolMenu.add(new MenuItem("Cascade All", new SelectionListener<MenuEvent>() {
+
             @Override
             public void componentSelected(MenuEvent evt) {
                 List<Window> windows = mgr.getWindows();
@@ -274,37 +281,55 @@ public class GWTHelloWorld implements EntryPoint {
 
     }
 
-    private void launchRecipeMenu() {
-        GWT.log("### launchRecipeMenu()");
-        final Menu toolMenu = new Menu();
-        ButtonBar buttonBar = new ButtonBar();
+    private void addTabbedContent() {
 
-        Button addWindowBtn = new Button("Add Wayne", new SelectionListener<ButtonEvent>() { // anonymous SelectionListener<ButtonEvent>
-            @Override
-            public void componentSelected(ButtonEvent evt) {
-                int randInt = Random.nextInt(20);
-                Window dummy = new Window();
-                dummy.setClosable(false);
-                dummy.setSize(200, 120);
-                dummy.setMinimizable(true);
-                dummy.setMaximizable(true);
-                dummy.setId("win_" + randInt);
-                dummy.setHeadingHtml("Window " + randInt);
-                dummy.setContainer(rightPanel.getElement());
-//                dummy.addWindowListener(windowListener);
-
-                dummy.show();
+        TabPanel tabPanel = new TabPanel();
+        tabPanel.setHeight(250);
+        tabPanel.setWidth(450);
+        tabPanel.setCloseContextMenu(true);
 
 
+        /*
+         * Our Icons interface extends ImageBundle and declares three methods,
+         * each named with the exact name of an image placed in the same package
+         * as the Icons interface. Having created the interface, preferably in
+         * its own java file, we proceed to used it with tabs and everywhere
+         * else AbstractImagePrototype icons are used in GXT.
+         *
+         */
+        Icons ICONS = GWT.create(Icons.class);
 
-                //                windowList.add(dummy);
-            }
-        });
-        buttonBar.add(addWindowBtn);
-        toolMenu.add(buttonBar);
-        // ### Add widgets to center layout container
-        centerPanel.add(toolMenu);
-//        toolMenu.add(new SeparatorMenuItem());
+        String title = "DashBoard";
+        TabItem homeTab = new TabItem(title);
+        homeTab.setIcon(AbstractImagePrototype.create((ImageResource)ICONS.home()));
+        homeTab.getHeader().setToolTip("Our " + title);
+        homeTab.add(new HtmlContainer("<h1>Dashboard Tab</h1>"));
+        tabPanel.add(homeTab);
+
+        title = "Valued Customers";
+        TabItem customersTab = new TabItem(title);
+        customersTab.setIcon(AbstractImagePrototype.create((ImageResource)ICONS.people()));
+        customersTab.getHeader().setToolTip("Our Really " + title);
+        customersTab.setClosable(true);
+        customersTab.add(new HtmlContainer("<h1>Customers Tab</h1>"));
+        tabPanel.add(customersTab);
+
+        title = "Data Reports";
+        TabItem reportsTab = new TabItem(title);
+        reportsTab.setIcon(AbstractImagePrototype.create((ImageResource)ICONS.orgchart()));
+        reportsTab.getHeader().setToolTip("The customer " + title);
+        reportsTab.setClosable(true);
+        reportsTab.add(new HtmlContainer("<h1>Reports Tab</h1>"));
+        tabPanel.add(reportsTab);
+        /*
+         * GxtCookbk is the application's entry point class. We access its main
+         * content panel using the static GxtCookBk.getAppCenterPanel() call. We
+         * add the tabPanel to the main content panel.
+         */
+
+        centerPanel.add(tabPanel);
+
+
     }
 
     /**
@@ -312,19 +337,18 @@ public class GWTHelloWorld implements EntryPoint {
      */
     @Override
     public void onModuleLoad() {
-//        this.launchRecipeMenu();
 
 //        this.addWindow();
 //        this.addDialog();
 //        this.addMsgBox();
-        
-        this.launchWindowManager();
+//        this.launchWindowManager();
+        this.addTabbedContent();
 
-       
-        
+
+
         // Attach center layout contaners to the html host page.
         RootPanel.get().add(centerPanel);
-         RootPanel.get().add(rightPanel);
+        RootPanel.get().add(rightPanel);
 
 
 // *****************************************************************************

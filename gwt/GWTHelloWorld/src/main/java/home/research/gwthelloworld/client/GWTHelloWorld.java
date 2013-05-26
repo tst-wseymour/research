@@ -13,10 +13,6 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ResourcePrototype;
-import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -25,6 +21,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.extjs.gxt.ui.client.core.El;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.TabPanelEvent;
+import com.extjs.gxt.ui.client.widget.TabItem;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Entry point classes define
@@ -385,7 +388,7 @@ public class GWTHelloWorld implements EntryPoint {
     }
 
     private void addProgrammaticTabs() {
-        
+
         final TabPanel tabPanel = new TabPanel();
         tabPanel.setHeight(250);
         tabPanel.setWidth(450);
@@ -401,22 +404,22 @@ public class GWTHelloWorld implements EntryPoint {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                String textFormat = "Tab Item" + (tabPanel.getItemCount()+1);
+                String textFormat = "Tab Item" + (tabPanel.getItemCount() + 1);
                 TabItem tab = new TabItem(textFormat);
                 tab.setClosable(true);
                 tabPanel.add(tab);
-                
+
             }
         }));
-        
+
         btnBar.add(new Button("Remove Tab", new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
                 TabItem tab = tabPanel.getSelectedItem();
-                if(tab.isClosable()) {
+                if (tab.isClosable()) {
                     tabPanel.remove(tab);
-                    
+
                 }
             }
         }));
@@ -424,17 +427,47 @@ public class GWTHelloWorld implements EntryPoint {
 
             @Override
             public void handleEvent(TabPanelEvent be) {
-                if(be.getItem().getTabPanel().getItemCount() == 1) {
+                if (be.getItem().getTabPanel().getItemCount() == 1) {
                     be.setCancelled(true);
                     MessageBox.alert("Error", "But there's only one tab left, Y remove it", null);
-                    
+
                 }
             }
         });
-        
+
         // add to view
         centerPanel.add(tabPanel);
         centerPanel.add(btnBar);
+    }
+
+    private void addTabsWithTabNotification() {
+
+        final TabPanel tabPanel = new TabPanel();
+        tabPanel.setHeight(250);
+        tabPanel.setWidth(450);
+        tabPanel.setTabScroll(true);
+        tabPanel.setAnimScroll(true);
+        tabPanel.setCloseContextMenu(true);
+
+        TabItem aTab;
+        for (int i = 1; i <= 3; ++i) {
+            aTab = new BlinkTabItem("TabItem " + i);
+            aTab.setClosable(true);
+            aTab.add(new HtmlContainer("<h1>Tab " + i + "</h1>"));
+            tabPanel.add(aTab);
+        }
+
+        centerPanel.add(tabPanel);
+
+        Timer wait = new Timer() {
+
+            @Override
+            public void run() {
+                BlinkTabItem tab = (BlinkTabItem) tabPanel.getItem(2);
+                tab.startBlinking();
+            }
+        };
+        wait.schedule(2000);
     }
 
     /**
@@ -448,9 +481,9 @@ public class GWTHelloWorld implements EntryPoint {
 //        this.addMsgBox();
 //        this.launchWindowManager();
 //        this.addTabbedContent();
-        this.addScrollableTabPanel();
+//        this.addScrollableTabPanel();
         this.addProgrammaticTabs();
-
+        this.addTabsWithTabNotification();
 
 
 
@@ -458,10 +491,84 @@ public class GWTHelloWorld implements EntryPoint {
         // Attach center layout contaners to the html host page.
         RootPanel.get().add(centerPanel);
 //        RootPanel.get().add(rightPanel);
+            
+    }
+    // eo onModuleLoad
+}
 
+class BlinkTabItem extends TabItem {
 
+    private Timer blinker;
+    protected boolean blinking;
+    protected int blinkInterval;
+
+    public BlinkTabItem() {
+        super();
+        initBlink();
+    }
+
+    public BlinkTabItem(String text) {
+        super(text);
+        initBlink();
+    }
+
+    @Override
+    protected void onRender(Element parent, int index) {
+        super.onRender(parent, index);
+        this.getTabPanel().addListener(Events.Select, new Listener<TabPanelEvent>() {
+
+            @Override
+            public void handleEvent(TabPanelEvent be) {
+                if (isBlinking()) {
+                    stopBlinking();
+                }
+            }
+        });
+    }
+
+    private void initBlink() {
+        blinking = false;
+        blinkInterval = 300;
+    }
+
+    public boolean isBlinking() {
+        return blinking;
+    }
+
+    public void stopBlinking() {
+        blinker.cancel();
+        blinking = false;
+    }
+
+    public void startBlinking() {
+        startBlinking(blinkInterval);
+    }
+
+    public void startBlinking(int interval) {
+        TabItem active = this.getTabPanel().getSelectedItem();
+        if (isBlinking() || this.equals(active) || !header.isEnabled()) {
+            return;
+        }
+
+        final El headerEl = header.el();
+        blinker = new Timer() {
+
+            @Override
+            public void run() {
+                String style = "x-tab-strip-over";
+                if (headerEl.hasStyleName(style)) {
+                    headerEl.setStyleName(style, false);
+                } else {
+                    headerEl.setStyleName(style, true);
+                }
+            }
+        };
+        blinker.scheduleRepeating(interval);
+        blinking = true;
+    }
+}
 // *****************************************************************************
-// BEGIN: BoilerPlate        
+// BEGIN: "onModuleLoad()"BoilerPlate        
 // *****************************************************************************        
 //    final Button sendButton = new Button( messages.sendButton() );
 //    final TextBox nameField = new TextBox();
@@ -569,8 +676,5 @@ public class GWTHelloWorld implements EntryPoint {
 //    sendButton.addClickHandler(handler);
 //    nameField.addKeyUpHandler(handler);
 // *****************************************************************************
-// END: BoilerPlate        
-// *****************************************************************************                
-    }
-    // eo onModuleLoad
-}
+// END: "onModuleLoad()" BoilerPlate        
+// *****************************************************************************    

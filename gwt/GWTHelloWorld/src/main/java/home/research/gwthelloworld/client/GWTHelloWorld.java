@@ -520,6 +520,47 @@ public class GWTHelloWorld implements EntryPoint {
         centerPanel.add(buttonBar);
     }
 
+    private void addOnlyhowTabstripTwoOrMoreTabs() {
+        final TabPanel tabPanel = new WiseStripTabPanel();
+        tabPanel.setHeight(250);
+        tabPanel.setWidth(450);
+        tabPanel.setCloseContextMenu(true);
+
+        TabItem homeTab = new TabItem("DashBoard");
+        homeTab.add(new HtmlContainer("<h1>DashBoard Tab</h1>"));
+        tabPanel.add(homeTab);
+
+        ButtonBar btnBar = new ButtonBar();
+        btnBar.add(new Button("Add Tab", new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent evt) {
+                int pos = tabPanel.getItemCount() + 1;
+                TabItem tab = new TabItem("TabItem " + pos);
+                tab.add(new HtmlContainer("<h1>Tab " + pos + "</h1>"));
+                tab.setClosable(true);
+                tabPanel.add(tab);
+            }
+        }));
+        btnBar.add(new Button("Remove Tab", new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent evt) {
+                TabItem tab = tabPanel.getSelectedItem();
+                if (tab.isClosable()) {
+                    tabPanel.remove(tab);
+                }
+            }
+        }));
+        /*
+         * GxtCookbk is the application's entry point class. We access its main
+         * content panel using the static GxtCookBk.getAppCenterPanel() call. We
+         * add the tabPanel and the buttonBar to the main content panel.
+         */
+        centerPanel.add(tabPanel);
+        centerPanel.add(btnBar);
+    }
+
     /**
      * This is the entry point method.
      */
@@ -533,8 +574,9 @@ public class GWTHelloWorld implements EntryPoint {
 //        this.addTabbedContent();
 //        this.addScrollableTabPanel();
 //        this.addProgrammaticTabs();
-        this.addTabsWithTabNotification();
+//        this.addTabsWithTabNotification();
         this.addHowToSearchLocateSelectParticularTab();
+        this.addOnlyhowTabstripTwoOrMoreTabs();
 
 
 
@@ -545,6 +587,53 @@ public class GWTHelloWorld implements EntryPoint {
 
     }
     // eo onModuleLoad
+}
+
+class WiseStripTabPanel extends TabPanel {
+
+    public WiseStripTabPanel() {
+        super();
+    }
+
+    @Override
+    protected void onRender(Element parent, int index) {
+        super.onRender(parent, index);
+
+        hideTabStrip();
+        addListener(Events.Add, new Listener<TabPanelEvent>() {
+
+            @Override
+            public void handleEvent(TabPanelEvent evt) {
+                if (getItemCount() >= 2) {
+                    showTabStrip();
+                }
+            }
+        });
+        addListener(Events.Remove, new Listener<TabPanelEvent>() {
+
+            @Override
+            public void handleEvent(TabPanelEvent evt) {
+                if (getItemCount() == 1) {
+                    hideTabStrip();
+                }
+            }
+        });
+
+    }
+
+    private void hideTabStrip() {
+        TabItem lastMan = getItem(0);
+        String cls = ".x-tab-strip-wrap";
+        El stripWrap = lastMan.getHeader().el().findParent(cls, 10);
+        stripWrap.hide();
+    }
+
+    private void showTabStrip() {
+        TabItem lastMan = getItem(0);
+        String cls = ".x-tab-strip-wrap";
+        El stripWrap = lastMan.getHeader().el().findParent(cls, 10);
+        stripWrap.show();
+    }
 }
 
 class BlinkTabItem extends TabItem {

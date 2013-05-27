@@ -451,9 +451,11 @@ public class GWTHelloWorld implements EntryPoint {
 
         TabItem aTab;
         for (int i = 1; i <= 3; ++i) {
-            aTab = new BlinkTabItem("TabItem " + i);
+            aTab = new BlinkTabItem();
+            aTab.setHtml("TabItem " + i);
             aTab.setClosable(true);
             aTab.add(new HtmlContainer("<h1>Tab " + i + "</h1>"));
+
             tabPanel.add(aTab);
         }
 
@@ -470,6 +472,54 @@ public class GWTHelloWorld implements EntryPoint {
         wait.schedule(2000);
     }
 
+    private void addHowToSearchLocateSelectParticularTab() {
+        final TabPanel tabPanel = new TabPanel();
+        tabPanel.setHeight(250);
+        tabPanel.setWidth(450);
+        tabPanel.setCloseContextMenu(true);
+
+        for (int i = 0; i < 5; ++i) {
+            TabItem aTab = new TabItem("TabItem " + i);
+            aTab.setItemId("tab_" + i);
+            aTab.setClosable(true);
+            aTab.add(new HtmlContainer("<h1>Tab " + i + "</h1>"));
+            tabPanel.add(aTab);
+        }
+
+        SelectionListener<ButtonEvent> listener = new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent evt) {
+                String btnId = evt.getButton().getItemId();
+                String tabId = "tab" + btnId.substring(btnId.indexOf("_"), btnId.length());
+                TabItem result = tabPanel.findItem(tabId, true);
+                if (result != null) {
+                    if (result.equals(tabPanel.getSelectedItem())) {
+                        Info.display("Message", "already selected");
+                    } else {
+                        tabPanel.setSelection(result);
+                    }
+                }
+            }
+        };
+
+        ButtonBar buttonBar = new ButtonBar();
+        Button btn1 = new Button("Gimme tab_0", listener);
+        btn1.setItemId("btn_0");
+        buttonBar.add(btn1);
+
+        Button btn2 = new Button("Gimme tab_3", listener);
+        btn2.setItemId("btn_3");
+        buttonBar.add(btn2);
+        /*
+         * GxtCookbk is the application's entry point class. We access its main
+         * content panel using the static GxtCookBk.getAppCenterPanel() call. We
+         * add the tabPanel and the buttonBar to the main content panel.
+         */
+        centerPanel.add(tabPanel);
+        centerPanel.add(buttonBar);
+    }
+
     /**
      * This is the entry point method.
      */
@@ -482,8 +532,9 @@ public class GWTHelloWorld implements EntryPoint {
 //        this.launchWindowManager();
 //        this.addTabbedContent();
 //        this.addScrollableTabPanel();
-        this.addProgrammaticTabs();
+//        this.addProgrammaticTabs();
         this.addTabsWithTabNotification();
+        this.addHowToSearchLocateSelectParticularTab();
 
 
 
@@ -491,7 +542,7 @@ public class GWTHelloWorld implements EntryPoint {
         // Attach center layout contaners to the html host page.
         RootPanel.get().add(centerPanel);
 //        RootPanel.get().add(rightPanel);
-            
+
     }
     // eo onModuleLoad
 }
